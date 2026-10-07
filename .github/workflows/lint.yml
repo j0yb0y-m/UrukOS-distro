@@ -1,0 +1,18 @@
+name: lint
+on: [push, pull_request]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxml2-utils shellcheck
+      - name: xmllint on kiwi files
+        run: |
+          for f in kiwi/*.kiwi kiwi/components/*.xml kiwi/components/desktops/*.xml; do
+            xmllint --noout "$f"
+          done
+      - name: shellcheck
+        run: shellcheck scripts/*.sh
